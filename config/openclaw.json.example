@@ -1,0 +1,260 @@
+{
+  "meta": {
+    "lastTouchedVersion": "2026.2.15",
+    "lastTouchedAt": "2026-03-11T10:45:18.210Z"
+  },
+  "wizard": {
+    "lastRunAt": "2026-02-25T16:06:12.847Z",
+    "lastRunVersion": "2026.2.15",
+    "lastRunCommand": "doctor",
+    "lastRunMode": "local"
+  },
+  "auth": {
+    "profiles": {
+      "kimi-coding:default": {
+        "provider": "kimi-coding",
+        "mode": "api_key"
+      }
+    },
+    "order": {
+      "kimi-coding": [
+        "kimi-coding:default"
+      ]
+    }
+  },
+  "models": {
+    "mode": "merge",
+    "providers": {
+      "kimi-coding": {
+        "baseUrl": "http://localhost:20000",
+        "apiKey": "YOUR_KIMI_API_KEY_HERE",
+        "api": "openai-completions",
+        "models": [
+          {
+            "id": "k2p5",
+            "name": "Kimi K2.5",
+            "reasoning": true,
+            "input": [
+              "text"
+            ],
+            "cost": {
+              "input": 0,
+              "output": 0,
+              "cacheRead": 0,
+              "cacheWrite": 0
+            },
+            "contextWindow": 256000,
+            "maxTokens": 65536
+          }
+        ]
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "kimi-coding/k2p5",
+        "fallbacks": []
+      },
+      "models": {
+        "kimi-coding/k2p5": {
+          "alias": "Kimi K2.5"
+        }
+      },
+      "workspace": "~/.openclaw/workspace",
+      "memorySearch": {
+        "enabled": false,
+        "sources": [
+          "memory",
+          "sessions"
+        ],
+        "experimental": {
+          "sessionMemory": true
+        },
+        "query": {
+          "hybrid": {
+            "enabled": true,
+            "vectorWeight": 0.7,
+            "textWeight": 0.3
+          }
+        }
+      },
+      "contextPruning": {
+        "mode": "cache-ttl",
+        "ttl": "1h"
+      },
+      "compaction": {
+        "mode": "safeguard"
+      },
+      "heartbeat": {
+        "every": "30m"
+      },
+      "maxConcurrent": 8,
+      "subagents": {
+        "maxConcurrent": 16
+      }
+    },
+    "list": [
+      {
+        "id": "main",
+        "default": true,
+        "name": "主助手",
+        "model": {
+          "primary": "kimi-coding/k2p5",
+          "fallbacks": []
+        },
+        "identity": {
+          "name": "主助手"
+        },
+        "tools": {
+          "elevated": {
+            "enabled": true,
+            "allowFrom": {
+              "feishu": [
+                "*"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": "coding",
+        "name": "代码开发",
+        "workspace": "~/.openclaw/workspace/agents/coding",
+        "model": {
+          "primary": "kimi-coding/k2p5",
+          "fallbacks": []
+        },
+        "identity": {
+          "name": "代码开发助手"
+        },
+        "tools": {
+          "elevated": {
+            "enabled": true,
+            "allowFrom": {
+              "feishu": [
+                "*"
+              ]
+            }
+          }
+        }
+      }
+    ]
+  },
+  "tools": {
+    "elevated": {
+      "enabled": true,
+      "allowFrom": {
+        "feishu": [
+          "*"
+        ]
+      }
+    },
+    "exec": {
+      "host": "gateway",
+      "security": "full",
+      "ask": "off"
+    }
+  },
+  "bindings": [
+    {
+      "agentId": "main",
+      "match": {
+        "channel": "feishu",
+        "peer": {
+          "kind": "dm",
+          "id": "*"
+        }
+      }
+    },
+    {
+      "agentId": "coding",
+      "match": {
+        "channel": "feishu",
+        "peer": {
+          "kind": "group",
+          "id": "*"
+        }
+      }
+    }
+  ],
+  "messages": {
+    "ackReactionScope": "group-mentions"
+  },
+  "commands": {
+    "native": "auto",
+    "nativeSkills": "auto"
+  },
+  "cron": {
+    "enabled": true
+  },
+  "hooks": {
+    "internal": {
+      "enabled": true,
+      "entries": {
+        "session-memory": {
+          "enabled": true
+        },
+        "command-logger": {
+          "enabled": true
+        },
+        "bootstrap-extra-files": {
+          "enabled": true
+        },
+        "boot-md": {
+          "enabled": true
+        }
+      }
+    }
+  },
+  "channels": {
+    "feishu": {
+      "enabled": true,
+      "appId": "cli_a91874f37578dcda",
+      "appSecret": "VK1WhutgbcrdFKOk0FgMofng4TCNZPxJ",
+      "domain": "feishu",
+      "groupPolicy": "open",
+      "dmPolicy": "open",
+      "allowFrom": [
+        "*"
+      ]
+    }
+  },
+  "gateway": {
+    "port": 18789,
+    "mode": "local",
+    "bind": "loopback",
+    "auth": {
+      "mode": "token",
+      "token": "6441d5f258c67f01cd70195c812a448780dd8694e217bcf6"
+    },
+    "tailscale": {
+      "mode": "off",
+      "resetOnExit": false
+    }
+  },
+  "skills": {
+    "install": {
+      "nodeManager": "npm"
+    }
+  },
+  "plugins": {
+    "entries": {
+      "feishu": {
+        "enabled": true
+      },
+      "voice-call": {
+        "enabled": true
+      },
+      "llm-task": {
+        "enabled": true
+      },
+      "lobster": {
+        "enabled": true
+      },
+      "memory-lancedb": {
+        "enabled": false
+      }
+    }
+  }
+}
