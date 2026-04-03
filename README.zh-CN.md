@@ -22,52 +22,20 @@
 - `config/openclaw.json.example` — 指向本地代理的 OpenClaw 配置示例
 - `docs/bashrc-claw.sh` — 可选的 shell 辅助脚本，用于一起启动代理与 OpenClaw
 
-## 快速开始
-
-### 1. 克隆仓库
+## 获取源码
 
 ```bash
 git clone https://github.com/FengYunCalm/openclaw-kimi-proxy.git
 cd openclaw-kimi-proxy
 ```
 
-### 2. 准备 OpenClaw 配置
-
-可以从 `config/openclaw.json.example` 开始。关键字段如下：
-
-```json
-{
-  "models": {
-    "providers": {
-      "kimi-coding": {
-        "baseUrl": "http://localhost:20000",
-        "apiKey": "YOUR_KIMI_API_KEY_HERE"
-      }
-    }
-  }
-}
-```
-
-### 3. 启动代理
-
-```bash
-python src/kimi_proxy.py
-```
-
-当前最简代理默认监听 `20000` 端口，并把流量转发到 `https://api.kimi.com/coding/v1`。
-
-### 4. 验证代理
-
-```bash
-curl http://localhost:20000/models \
-  -H "Authorization: Bearer YOUR_KIMI_API_KEY_HERE"
-```
+如果你要看当前源码行为，优先从 `src/kimi_proxy.py`、`src/proxy_final.py` 和 `config/openclaw.json.example` 开始。
 
 ## 说明
 
 - 当前仓库在 `src/` 下保留了多个代理变体。
-- `docs/bashrc-claw.sh` 只是便捷脚本，不是代理运行的必需部分。
-- 这个仓库目前以脚本与说明文档为主，没有现成的打包发布流程。
+- `docs/bashrc-claw.sh` 只是便捷脚本。
+- 这个 README 只停留在源码仓库层面，不声明打包分发或托管部署渠道。
 
 ## 许可证
 
